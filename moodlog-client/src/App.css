@@ -1,0 +1,275 @@
+/* 1. 폰트 및 기본 설정 */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+* {
+  box-sizing: border-box;
+  font-family: 'Pretendard', -apple-system, sans-serif;
+}
+
+body {
+  margin: 0;
+  /* 승민님 앱의 정체성: 다크 퍼플 배경 */
+  background: radial-gradient(circle at top right, #2d1b69, #0f172a) no-repeat;
+  background-attachment: fixed;
+  color: #f8fafc;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 1. 상단 메인 제목 스타일 수정 */
+h2, .main-title, header div, .App-header div {
+  /* 승민님 앱의 메인 보라색으로 변경 */
+  color: #8b5cf6 !important; 
+  
+  /* ㅈㄴ 굵게 (최대치 900) */
+  font-weight: 900 !important; 
+  
+  /* 크기도 존재감 있게 */
+  font-size: 36px !important; 
+  
+  /* 약간의 광채 효과 (선택사항, 맘에 안 들면 빼세요) */
+  text-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+  
+  margin-bottom: 15px !important;
+  letter-spacing: -0.5px;
+}
+
+/* 2. 제목 앞의 아이콘이나 🎧 이모지 색깔 보정 */
+h2 span, .main-title span {
+  color: #fff !important; /* 아이콘은 하얀색으로 대비 */
+  margin-right: 10px;
+}
+
+/* 설명글 스타일 (승민님이 선택하신...) */
+.main-subtitle, header p, .App-header p {
+  font-weight: 600 !important;
+  color: #94a3b8 !important;
+  font-size: 16px !important;
+  opacity: 0.9;
+}
+
+/* 3. 로그인/회원가입 (AuthPage) 스타일 */
+.auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 50px 40px;
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(15px);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.auth-title {
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 30px;
+  background: linear-gradient(to bottom right, #a78bfa, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  background: rgba(15, 23, 42, 0.5);
+  color: white;
+}
+
+.auth-submit-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(45deg, #8b5cf6, #7c3aed);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* 4. 일기장(Diary) 스타일 - 다크모드에 맞춰 보정 */
+.diary-container {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 40px;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 24px;
+  backdrop-filter: blur(10px);
+}
+
+textarea {
+  width: 100%;
+  height: 250px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 18px;
+  line-height: 1.8;
+  resize: none;
+  background-image: linear-gradient(transparent, transparent 30px, rgba(255,255,255,0.1) 30px);
+  background-size: 100% 31px;
+}
+
+/* 다른 제목 건드리지 말고, 오직 이 텍스트만 900 굵기에 보라색 적용 */
+div:has(> span:contains("🎧")), 
+div:contains("오늘의 추천 음악"),
+.main-title {
+  color: #8b5cf6 !important; 
+  font-weight: 900 !important; 
+  font-size: 36px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  background: none !important;
+  -webkit-text-fill-color: #8b5cf6 !important;
+}
+
+/* 혹시 모르니 h1, h2 전역 설정은 여기서 초기화 (다른 거 변하는 거 방지) */
+h1, h2, h3 {
+  all: revert;
+  font-family: 'Pretendard', sans-serif;
+}
+
+/* DiaryPage 전용: 줄노트 컨테이너 */
+.diary-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(30, 41, 59, 0.5); /* 은은한 다크 블루 */
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* 텍스트 줄 맞춤을 위한 전용 클래스 */
+.diary-textarea {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  line-height: 30px; /* 글자 높이 */
+  padding: 0;
+  margin: 0;
+  color: #fff;
+  outline: none;
+  resize: none;
+  /* 줄무늬: 29px은 빈공간, 나머지 1px은 줄 색상 */
+  background-image: linear-gradient(transparent, transparent 29px, rgba(255, 255, 255, 0.15) 29px);
+  background-size: 100% 30px; /* 줄 간격과 동일하게 설정 */
+}
+
+/* ============================================================
+   [AUTH PAGE] 회원가입 & 로그인 스타일 복구
+   ============================================================ */
+
+/* 배경과 중앙 정렬 */
+.auth-wrapper {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* 유리 질감 카드 */
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 50px 40px;
+  background: rgba(30, 41, 59, 0.6); /* 딥한 슬레이트 블루 */
+  backdrop-filter: blur(15px); /* 유리 블러 효과 */
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  color: #fff;
+}
+
+/* "처음이신가요?" 제목 스타일 */
+.auth-title {
+  font-size: 32px;
+  font-weight: 900; /* ㅈㄴ 굵게 */
+  margin-bottom: 30px;
+  background: linear-gradient(to right, #a78bfa, #f472b6); /* 연보라~핑크 그라데이션 */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block;
+}
+
+/* 입력창 스타일 */
+.auth-input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.auth-input-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.5);
+  color: white;
+  font-size: 16px;
+  transition: 0.3s;
+  outline: none;
+}
+
+.auth-input:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
+}
+
+/* 로그인/회원가입 버튼 */
+.auth-submit-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(45deg, #8b5cf6, #7c3aed);
+  color: white;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 10px;
+}
+
+.auth-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(139, 92, 246, 0.4);
+}
+
+/* "이미 계정이 있으신가요?" 토글 버튼 */
+.auth-toggle-btn {
+  margin-top: 25px;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 14px;
+  background: none;
+  border: none;
+  text-decoration: underline;
+  transition: 0.2s;
+}
+
+.auth-toggle-btn:hover {
+  color: #fff;
+}
