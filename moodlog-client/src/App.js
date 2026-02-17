@@ -10,7 +10,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [myPlaylist, setMyPlaylist] = useState([]);
   const [currentPage, setCurrentPage] = useState('auth');
-  const [userGenres, setUserGenres] = useState(["K-POP", "재즈", "힙합"]);
+  const [userGenres, setUserGenres] = useState([]); // ✅ 초기값 빈 배열로 변경 (사용자가 직접 선택하도록 유도)
 
   const addToPlaylist = async (music, genre) => {
     try {

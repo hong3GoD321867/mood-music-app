@@ -13,7 +13,7 @@ const AuthPage = ({ onLoginSuccess }) => {
       onLoginSuccess('genre_selection');
     } else {
       console.log("로그인 시도:", email);
-      onLoginSuccess('main');
+      onLoginSuccess('genre_selection'); // ✅ 로그인 후에도 취향 선택으로 이동
     }
   };
 

@@ -39,9 +39,11 @@ const DiaryPage = ({ onAddMusic }) => {
     titleLogo: { fontSize: '32px', fontWeight: '300', letterSpacing: '-1.5px', margin: 0 },
     tabBtn: { backgroundColor: '#000', color: '#fff', border: 'none', padding: '10px 24px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer', letterSpacing: '1px' },
     mainLayout: { display: 'grid', gridTemplateColumns: showChart ? '1fr' : '1.5fr 1fr', gap: '60px' },
-    textarea: { 
-      width: '100%', height: '450px', fontSize: '18px', border: 'none', outline: 'none', resize: 'none', padding: '0', color: '#334155', backgroundColor: 'transparent',
-      lineHeight: '30px', backgroundImage: 'linear-gradient(transparent, transparent 29px, #e5e7eb 29px)', backgroundSize: '100% 30px', backgroundAttachment: 'local'
+    textarea: {
+      width: '100%', height: '450px', fontSize: '18px', border: 'none', outline: 'none', resize: 'none', padding: '0',
+      color: '#333', backgroundColor: 'transparent',
+      lineHeight: '30px', backgroundImage: 'linear-gradient(transparent, transparent 29px, #e5e7eb 29px)', backgroundSize: '100% 30px', backgroundAttachment: 'local',
+      fontFamily: 'system-ui, -apple-system, sans-serif'
     },
     analyzeBtn: { width: '100%', backgroundColor: '#000', color: '#fff', padding: '16px', borderRadius: '4px', border: 'none', fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', marginTop: '20px' },
     label: { fontSize: '11px', fontWeight: '800', color: '#ccc', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '20px', display: 'block' },
@@ -56,8 +58,12 @@ const DiaryPage = ({ onAddMusic }) => {
       <div style={s.wrapper}>
         <header style={s.header}>
           <div>
-            <h1 style={s.titleLogo}>{showChart ? "ANALYTICS" : "MOOD LOG"}</h1>
-            <div style={{ color: '#aaa', fontSize: '13px', marginTop: '5px', fontFamily: 'monospace' }}>2026.02.11</div>
+            <h1 style={{ ...s.titleLogo, color: '#333' }}>
+              {showChart ? "ANALYTICS" : "일기 쓰기"}
+            </h1>
+            <div style={{ color: '#666', fontSize: '14px', marginTop: '5px', fontFamily: 'system-ui, sans-serif', fontWeight: '500' }}>
+              {new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}
+            </div>
           </div>
           <button style={s.tabBtn} onClick={() => setShowChart(!showChart)}>
             {showChart ? "BACK TO WRITE" : "VIEW STATS"}
@@ -85,7 +91,7 @@ const DiaryPage = ({ onAddMusic }) => {
                         <div style={{ display: 'inline-block', padding: '4px 12px', backgroundColor: '#f0f0f0', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', marginBottom: '15px' }}>{result.emotion_label}</div>
                         <p>{result.ai_reply}</p>
                       </div>
-                    ) : ( <p style={{ color: '#ccc' }}>감정을 분석 중입니다...</p> )}
+                    ) : (<p style={{ color: '#ccc' }}>감정을 분석 중입니다...</p>)}
                   </div>
                 </div>
 
@@ -106,8 +112,8 @@ const DiaryPage = ({ onAddMusic }) => {
                           <button style={s.musicBtn} onClick={() => openMusicPlatform('spotify', result.recommended_song.title, result.recommended_song.artist)}>Spotify</button>
                         </div>
                         {/* ✅ [추가] 플레이리스트 담기 버튼 */}
-                        <button 
-                          style={s.addBtn} 
+                        <button
+                          style={s.addBtn}
                           onClick={() => onAddMusic(result.recommended_song, result.emotion_label)}
                         >
                           + 플레이리스트에 담기
