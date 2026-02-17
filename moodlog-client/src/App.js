@@ -9,7 +9,7 @@ import MusicHomePage from './MusicHomePage';
 function App() {
   const [user, setUser] = useState(null);
   const [myPlaylist, setMyPlaylist] = useState([]);
-  const [currentPage, setCurrentPage] = useState('auth'); 
+  const [currentPage, setCurrentPage] = useState('auth');
   const [userGenres, setUserGenres] = useState(["K-POP", "재즈", "힙합"]);
 
   const addToPlaylist = async (music, genre) => {
@@ -37,6 +37,11 @@ function App() {
     setCurrentPage('main');
   };
 
+  const handleLogout = () => {
+    setUser(null);
+    setCurrentPage('auth');
+  };
+
   if (currentPage === 'auth') return <AuthPage onLoginSuccess={handleLogin} />;
   if (currentPage === 'genre_selection') return <GenreSelection onComplete={handleGenreComplete} />;
 
@@ -44,37 +49,58 @@ function App() {
     <div className="App">
       <nav style={{
         backgroundColor: 'rgba(15,23,42,0.8)',
-        backdropFilter:'blur(10px)', // ✅ 오타 수정 (backgroundFilter -> backdropFilter)
-        padding:'15px 20px',
-        display:'flex',
-        justifyContent:'center',
-        gap:'15px',
-        position:'sticky',
+        backdropFilter: 'blur(10px)', // ✅ 오타 수정 (backgroundFilter -> backdropFilter)
+        padding: '15px 20px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '15px',
+        position: 'sticky',
         top: 0,
-        zIndex:1000,
-        borderBottom:'1px solid rgba(255,255,255,0.1)'
+        zIndex: 1000,
+        borderBottom: '1px solid rgba(255,255,255,0.1)'
       }}>
-        <NavButton label="🏠 Home" active={currentPage === 'main'} onClick={() => setCurrentPage('main')} />
-        <NavButton label="✍️ Diary" active={currentPage === 'diary'} onClick={() => setCurrentPage('diary')} />
-        <NavButton label="🎵 Library" active={currentPage === 'playlist'} onClick={() => setCurrentPage('playlist')} />
+        <NavButton label="🏠 음악 추천" active={currentPage === 'main'} onClick={() => setCurrentPage('main')} />
+        <NavButton label="✍️ 일기 쓰기" active={currentPage === 'diary'} onClick={() => setCurrentPage('diary')} />
+        <NavButton label="🎵 나의 플레이리스트" active={currentPage === 'playlist'} onClick={() => setCurrentPage('playlist')} />
+
+        {/* 로그아웃 버튼 추가 */}
+        <button
+          onClick={handleLogout}
+          style={{
+            position: 'absolute',
+            right: '20px',
+            padding: '8px 16px',
+            borderRadius: '20px',
+            border: '1px solid #ef4444',
+            backgroundColor: 'transparent',
+            color: '#ef4444',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: '600',
+            transition: 'all 0.3s ease'
+          }}
+        >
+          로그아웃
+        </button>
       </nav>
 
       <div style={{ padding: '20px' }}>
         {currentPage === 'main' && (
           <>
             {/* ❌ 중복되던 얇은 제목(h1, p)을 여기서 완전히 지웠습니다! ❌ */}
-            <MusicHomePage 
-              selectedGenres={userGenres} 
-              onAddMusic={addToPlaylist} 
+            <MusicHomePage
+              selectedGenres={userGenres}
+              onAddMusic={addToPlaylist}
               onEditGenres={() => setCurrentPage('genre_selection')}
             />
           </>
         )}
 
-        {currentPage === 'diary' &&(<DiaryPage onAddMusic={addToPlaylist}/>
+        {currentPage === 'diary' && (<DiaryPage onAddMusic={addToPlaylist} />
         )}
         {currentPage === 'playlist' && <PlaylistPage />}
-        
+
         {currentPage === 'genre_selection' && (
           <GenreSelection onComplete={handleGenreComplete} />
         )}
