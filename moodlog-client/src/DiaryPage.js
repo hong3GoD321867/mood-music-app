@@ -58,10 +58,10 @@ const DiaryPage = ({ onAddMusic }) => {
       <div style={s.wrapper}>
         <header style={s.header}>
           <div>
-            <h1 style={{ ...s.titleLogo, color: '#333' }}>
+            <h1 style={{ ...s.titleLogo, color: '#000', fontWeight: 'bold', letterSpacing: '-0.5px' }}>
               {showChart ? "ANALYTICS" : "일기 쓰기"}
             </h1>
-            <div style={{ color: '#666', fontSize: '14px', marginTop: '5px', fontFamily: 'system-ui, sans-serif', fontWeight: '500' }}>
+            <div style={{ color: '#000', fontSize: '16px', marginTop: '10px', fontWeight: 'bold' }}>
               {new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}
             </div>
           </div>
