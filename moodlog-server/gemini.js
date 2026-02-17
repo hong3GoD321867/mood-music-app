@@ -57,4 +57,54 @@ async function analyzeDiary(content) {
   }
 }
 
-module.exports = { analyzeDiary };
+async function recommendMusicByGenre(genre) {
+  const apiKey = process.env.GEMINI_API_KEY;
+  const model = 'gemini-2.5-flash';
+  const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
+
+  const prompt = `
+    사용자가 "${genre}" 장르의 음악을 듣고 싶어해.
+    이 장르에 어울리는 한국 또는 해외의 좋은 노래 10곡을 추천해줘.
+    
+    반드시 아래의 JSON 형식으로만, 다른 텍스트 없이 답변해줘.
+    
+    응답 형식 (JSON):
+    [
+      {
+        "title": "노래 제목",
+        "artist": "가수 이름",
+        "reason": "추천 이유 (1문장)"
+      },
+      ... (총 10개)
+    ]
+    
+    위 JSON 형식을 반드시 지키고, 마크다운이나 설명 문장은 절대 추가하지 마.
+  `;
+
+  const data = {
+    contents: [{
+      parts: [{
+        text: prompt
+      }]
+    }]
+  };
+
+  try {
+    const response = await axios.post(url, data, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    const text = response.data.candidates[0].content.parts[0].text;
+    const jsonMatch = text.match(/\[[\s\S]*\]/); // Array checking
+    if (!jsonMatch) {
+      throw new Error("JSON 형식을 찾을 수 없습니다.");
+    }
+    return JSON.parse(jsonMatch[0]);
+  } catch (error) {
+    const apiError = error.response ? error.response.data : error.message;
+    console.error("❌ 음악 추천 에러:", apiError);
+    throw new Error("음악 추천 실패: " + JSON.stringify(apiError));
+  }
+}
+
+module.exports = { analyzeDiary, recommendMusicByGenre };

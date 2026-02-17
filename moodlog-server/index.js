@@ -2,7 +2,7 @@ const result = require('dotenv').config({ debug: true });
 const express = require('express');
 const cors = require('cors');
 const db = require('./db');
-const { analyzeDiary } = require('./gemini');
+const { analyzeDiary, recommendMusicByGenre } = require('./gemini');
 
 if (result.error) {
   console.error("❌ 도트엔브 에러 발생:", result.error);
@@ -80,6 +80,25 @@ app.get('/test-ai', async (req, res) => {
     console.error("테스트 에러:", err);
     res.status(500).json({ error: err.message });
   }
+}
+);
+
+// 4.5. 음악 추천 API
+app.post('/api/music/recommend', async (req, res) => {
+  const { genre } = req.body;
+
+  if (!genre) {
+    return res.status(400).json({ error: "장르를 선택해주세요." });
+  }
+
+  try {
+    console.log(`🎵 ${genre} 장르 음악 추천 요청 중...`);
+    const recommendations = await recommendMusicByGenre(genre);
+    res.json(recommendations);
+  } catch (err) {
+    console.error("음악 추천 실패:", err);
+    res.status(500).json({ error: "음악 추천을 가져오지 못했습니다." });
+  }
 });
 
 // 5. 실제 일기 저장 API
@@ -90,7 +109,7 @@ app.post('/api/diaries', async (req, res) => {
   try {
     console.log("🤖 AI 분석 시작...");
     const analysis = await analyzeDiary(content);
-    
+
     const queryText = `
       INSERT INTO diaries (content, emotion_label, joy_score, sadness_score, anger_score, anxiety_score, neutral_score, ai_reply)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
@@ -103,13 +122,13 @@ app.post('/api/diaries', async (req, res) => {
     ];
 
     const dbResult = await db.query(queryText, values);
-    
+
     // DB 저장 결과에 AI 분석 결과(노래 추천 포함)를 추가해서 응답
     const responseData = {
       ...dbResult.rows[0],
       recommended_song: analysis.recommended_song || null
     };
-    
+
     res.json(responseData);
   } catch (error) {
     console.error("❌ 에러 발생:", error);
@@ -120,7 +139,7 @@ app.post('/api/diaries', async (req, res) => {
 // 6. 플레이리스트에 노래 추가
 app.post('/api/playlists', async (req, res) => {
   const { song_title, artist, keyword, reason, diary_id } = req.body;
-  
+
   if (!song_title || !artist || !keyword) {
     return res.status(400).json({ error: "노래 제목, 아티스트, 키워드는 필수입니다." });
   }
@@ -132,7 +151,7 @@ app.post('/api/playlists', async (req, res) => {
       WHERE song_title = $1 AND artist = $2 AND keyword = $3
     `;
     const existing = await db.query(checkQuery, [song_title, artist, keyword]);
-    
+
     if (existing.rows.length > 0) {
       return res.status(409).json({ error: "이미 이 키워드로 저장된 노래입니다." });
     }
@@ -143,7 +162,7 @@ app.post('/api/playlists', async (req, res) => {
       RETURNING *;
     `;
     const result = await db.query(insertQuery, [song_title, artist, keyword, reason || null, diary_id || null]);
-    
+
     res.json({ message: "플레이리스트에 추가되었습니다!", song: result.rows[0] });
   } catch (error) {
     console.error("❌ 플레이리스트 추가 에러:", error);
@@ -182,7 +201,7 @@ app.get('/api/playlists', async (req, res) => {
 // 8. 특정 키워드의 플레이리스트 조회
 app.get('/api/playlists/:keyword', async (req, res) => {
   const { keyword } = req.params;
-  
+
   try {
     const query = `
       SELECT * FROM playlists 
@@ -200,15 +219,15 @@ app.get('/api/playlists/:keyword', async (req, res) => {
 // 9. 플레이리스트에서 노래 제거
 app.delete('/api/playlists/:id', async (req, res) => {
   const { id } = req.params;
-  
+
   try {
     const query = `DELETE FROM playlists WHERE id = $1 RETURNING *;`;
     const result = await db.query(query, [id]);
-    
+
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "해당 노래를 찾을 수 없습니다." });
     }
-    
+
     res.json({ message: "플레이리스트에서 제거되었습니다.", song: result.rows[0] });
   } catch (error) {
     console.error("❌ 플레이리스트 제거 에러:", error);
